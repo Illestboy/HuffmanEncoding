@@ -42,11 +42,6 @@ public class Encoder {
         public int compareTo(Node o) {
             return this.frequency.compareTo(o.frequency);
         }
-
-        @Override
-        public String toString() {
-            return String.valueOf(this.frequency);
-        }
     }
 
     public static void main(String[] args) {
@@ -62,26 +57,26 @@ public class Encoder {
         Encoder encoder = new Encoder();
         encoder.setText(text.toString());
         encoder.encode();
-        System.out.println(encoder.getTable());
+        System.out.println(encoder.getCodeTable());
         System.out.println(encoder.getEncodedText());
     }
 
-    private String inputText;
+    private String text;
 
-    private Map<Character, Integer> chars;
+    private Map<Character, Integer> charsFrequency;
 
-    private Map<Character, String> table;
+    private Map<Character, String> codeTable;
 
     private PriorityQueue<Node> queue;
 
     private static Set<Character> validCharacters;
 
     public Encoder() {
-        chars = new HashMap<>();
+        charsFrequency = new HashMap<>();
         validCharacters = new HashSet<>();
         queue = new PriorityQueue<>();
-        table = new LinkedHashMap<>();
-        inputText = "";
+        codeTable = new HashMap<>();
+        text = "";
         initializeAllowedCharacters();
     }
 
@@ -103,7 +98,7 @@ public class Encoder {
     }
 
     public void encode() {
-        this.chars.forEach((key, value) -> this.queue.add(new Node(key, value)));
+        this.charsFrequency.forEach((key, value) -> this.queue.add(new Node(key, value)));
         while (queue.size() > 1) {
             this.queue.add(new Node(queue.poll(), queue.poll()));
         }
@@ -112,9 +107,9 @@ public class Encoder {
 
     public String getEncodedText() {
         StringBuilder result = new StringBuilder();
-        for (char c : inputText.toCharArray()) {
+        for (char c : text.toCharArray()) {
             if (validCharacters.contains(c)) {
-                result.append(this.table.get(c));
+                result.append(this.codeTable.get(c));
             }
         }
         return result.toString();
@@ -122,7 +117,7 @@ public class Encoder {
 
     private void buildTable(Node node, String code){
         if (node.getCharacter() != null) {
-            table.put(node.getCharacter(), code.length() > 0 ? code : "0");
+            codeTable.put(node.getCharacter(), code.length() > 0 ? code : "0");
             return;
         }
         if (node.getLeftNode() != null) {
@@ -134,15 +129,15 @@ public class Encoder {
     }
 
     public void setText(String s) {
-        this.inputText = s;
+        this.text = s;
         for (char c : s.toCharArray()) {
             if (validCharacters.contains(c)) {
-                chars.put(c, chars.getOrDefault(c, 0) + 1);
+                charsFrequency.put(c, charsFrequency.getOrDefault(c, 0) + 1);
             }
         }
     }
 
-    public Map<Character, String> getTable() {
-        return Collections.unmodifiableMap(table);
+    public Map<Character, String> getCodeTable() {
+        return Collections.unmodifiableMap(codeTable);
     }
 }
