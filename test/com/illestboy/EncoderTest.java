@@ -1,3 +1,5 @@
+package com.illestboy;
+
 import com.illestboy.Encoder;
 import org.junit.jupiter.api.Test;
 
