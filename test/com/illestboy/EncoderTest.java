@@ -1,6 +1,5 @@
 package com.illestboy;
 
-import com.illestboy.Encoder;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -11,14 +10,14 @@ class EncoderTest {
 
     private String getEncodedString(String inputString) {
         Encoder encoder = new Encoder();
-        encoder.encode(inputString);
+        encoder.setText(inputString);
         return encoder.getEncodedText();
     }
 
-    private Map<Character, String> getCodeTable(String allAllowedChars) {
+    private Map<Character, String> getCharCodeTable(String inputString) {
         Encoder encoder = new Encoder();
-        encoder.encode(allAllowedChars);
-        return encoder.getCodeTable();
+        encoder.setText(inputString);
+        return encoder.getCharCodeTable();
     }
 
     @Test
@@ -77,17 +76,25 @@ class EncoderTest {
                 "abcdefghijklmnopqrstuvwxyz" +
                 "0123456789" +
                 ":,. ";
-        Map<Character, String> codeTable = getCodeTable(allAllowedChars);
+        Map<Character, String> codeTable = getCharCodeTable(allAllowedChars);
         assertEquals(codeTable.size(), allAllowedChars.length());
     }
 
     @Test
     void isPrefixCode() {
         String allAllowedChars = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-        Map<Character, String> codeTable = getCodeTable(allAllowedChars);
+        Map<Character, String> codeTable = getCharCodeTable(allAllowedChars);
         boolean havePrefix = codeTable.entrySet().stream()
                 .anyMatch(entry -> codeTable.values().stream()
                         .anyMatch(code -> !code.equals(entry.getValue()) && code.startsWith(entry.getValue())));
         assertEquals(false, havePrefix);
+    }
+
+    @Test
+    void canDecode() {
+        String inputString = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        Encoder encoder = new Encoder();
+        encoder.setText(inputString);
+        assertEquals(inputString, encoder.decode(encoder.getEncodedText()));
     }
 }

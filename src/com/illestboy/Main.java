@@ -6,8 +6,8 @@ public class Main {
     public static void main(String[] args) {
         String text = readInput(args);
         Encoder encoder = new Encoder();
-        encoder.encode(text);
-        System.out.println(encoder.getCodeTable());
+        encoder.setText(text);
+        System.out.println(encoder.getCharCodeTable());
         System.out.println(encoder.getEncodedText());
     }
 
