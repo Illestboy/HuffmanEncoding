@@ -96,6 +96,6 @@ public class Encoder {
     }
 
     public Map<String, Character> getCodeCharTable() {
-        return codeCharTable;
+        return Collections.unmodifiableMap(codeCharTable);
     }
 }
